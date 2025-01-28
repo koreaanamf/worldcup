@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>이상형 월드컵</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background-color: #f9f9f9;
+            padding: 10px;
+        }
+        h1 {
+            color: #333;
+            font-size: 1.8em;
+            margin-bottom: 20px;
+        }
+        p {
+            font-size: 1.2em;
+            color: #555;
+            margin-bottom: 30px;
+        }
+        button {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            padding: 15px 32px;
+            font-size: 1.2em;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        .image-container {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-top: 20px;
+        }
+        .image-container img {
+            width: 45%;
+            height: auto;
+            object-fit: cover;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+        .image-container img:hover {
+            transform: scale(1.05);
+        }
+        .result {
+            display: none;
+            margin-top: 50px;
+            font-size: 1.2em;
+        }
+        @media (max-width: 600px) {
+            .image-container img {
+                width: 90%;
+                margin-bottom: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <h1>이상형 월드컵</h1>
+    <p>당신의 이상형을 선택하세요! 최종 순위를 확인해 보세요!</p>
+
+    <div id="main-screen">
+        <button onclick="startTournament()">대회 시작</button>
+    </div>
+
+    <div id="tournament-screen" style="display:none;">
+        <h2>대결 중...</h2>
+        <div class="image-container" id="current-match"></div>
+    </div>
+
+    <div class="result" id="result">
+        <h2>최종 결과</h2>
+        <p id="final-result"></p>
+    </div>
+
+    <script>
+        const contestants = [
+            { name: '장원영', image: 'https://img.koreapas.com/i/9374612' },
+            { name: '카리나', image: 'https://img.koreapas.com/i/f8e6223' },
+            { name: '설윤', image: 'https://img.koreapas.com/i/c3c00c6' },
+            { name: '우정잉', image: 'https://img.koreapas.com/i/d0d5f55' },
+            { name: '해린', image: 'https://img.koreapas.com/i/202d399' },
+            { name: '민지', image: 'https://img.koreapas.com/i/5766310' },
+            { name: '팜하니', image: 'https://img.koreapas.com/i/4d9cec2' },
+            { name: '쵸단', image: 'https://img.koreapas.com/i/950d916' }
+        ];
+
+        let shuffledContestants = [];
+        let winners = [];
+        let losers = [];
+
+        function shuffleArray(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+        }
+
+        function startTournament() {
+            shuffledContestants = [...contestants];
+            shuffleArray(shuffledContestants);
+            document.getElementById('main-screen').style.display = 'none';
+            document.getElementById('tournament-screen').style.display = 'block';
+            nextMatch();
+        }
+
+        function nextMatch() {
+            if (shuffledContestants.length > 1) {
+                const match = shuffledContestants.splice(0, 2);
+                const matchContainer = document.getElementById('current-match');
+                matchContainer.innerHTML = `
+                    <img src="${match[0].image}" alt="${match[0].name}" onclick="selectWinner('${match[0].name}', '${match[1].name}')">
+                    <img src="${match[1].image}" alt="${match[1].name}" onclick="selectWinner('${match[1].name}', '${match[0].name}')">
+                `;
+            } else {
+                losers = [...losers, ...shuffledContestants];
+                showResult();
+            }
+        }
+
+        function selectWinner(winnerName, loserName) {
+            winners.push(winnerName);
+            losers.push(loserName);
+            nextMatch();
+        }
+
+        function showResult() {
+            const finalRanking = [...winners, ...losers];
+            const formattedResult = finalRanking.map(person => person[0]).join('-'); // 앞글자만 추출
+            document.getElementById('final-result').textContent = `결과: ${formattedResult}`;
+            document.getElementById('result').style.display = 'block';
+            document.getElementById('tournament-screen').style.display = 'none';
+        }
+    </script>
+</body>
+</html>
