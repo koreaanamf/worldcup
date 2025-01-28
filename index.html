@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>이상형 월드컵</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background-color: #f9f9f9;
+            padding: 10px;
+        }
+        h1 {
+            color: #333;
+            font-size: 1.8em;
+            margin-bottom: 20px;
+        }
+        p {
+            font-size: 1.2em;
+            color: #555;
+            margin-bottom: 30px;
+        }
+        button {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            padding: 15px 32px;
+            font-size: 1.2em;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        .image-container {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-top: 20px;
+        }
+        .image-container img {
+            width: 45%;
+            height: auto;
+            object-fit: cover;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+        .image-container img:hover {
+            transform: scale(1.05);
+        }
+        .result {
+            display: none;
+            margin-top: 50px;
+            font-size: 1.2em;
+        }
+        @media (max-width: 600px) {
+            .image-container img {
+                width: 90%;
+                margin-bottom: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <h1>이상형 월드컵</h1>
+    <p>당신의 이상형을 선택하세요! 최종 순위를 확인해 보세요!</p>
+
+    <div id="main-screen">
+        <button onclick="startTournament()">대회 시작</button>
+    </div>
+
+    <div id="tournament-screen" style="display:none;">
+        <h2>대결 중...</h2>
+        <div class="image-container" id="current-match"></div>
+    </div>
+
+    <div class="result" id="result">
+        <h2>최종 결과</h2>
+        <p id="final-result"></p>
+    </div>
+
+    <script>
+        const contestants = [
+            { name: '장원영', image: 'https://img.koreapas.com/i/9374612' },
+            { name: '카리나', image: 'https://img.koreapas.com/i/f8e6223' },
+            { name: '설윤', image: 'https://img.koreapas.com/i/c3c00c6' },
+            { name: '우정잉', image: 'https://img.koreapas.com/i/d0d5f55' },
+            { name: '해린', image: 'https://img.koreapas.com/i/202d399' },
+            { name: '민지', image: 'https://img.koreapas.com/i/5766310' },
+            { name: '팜하니', image: 'https://img.koreapas.com/i/4d9cec2' },
+            { name: '쵸단', image: 'https://img.koreapas.com/i/950d916' }
+        ];
+
+        let rounds = []; // 라운드 데이터
+        let currentMatchIndex = 0;
+        let rankings = [];
+
+        function shuffleArray(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+        }
+
+        function startTournament() {
+            shuffleArray(contestants); // 참가자 랜덤 섞기
+            rounds = [contestants]; // 첫 라운드 초기화
+            document.getElementById('main-screen').style.display = 'none';
+            document.getElementById('tournament-screen').style.display = 'block';
+            nextMatch();
+        }
+
+        function nextMatch() {
+            if (rounds[currentMatchIndex].length === 1) {
+                // 현재 라운드 종료 -> 다음 라운드로 넘어감
+                const nextRound = rounds[currentMatchIndex].slice();
+                rounds.push([]);
+                rounds[currentMatchIndex + 1] = [];
+                currentMatchIndex++;
+                nextMatch();
+                return;
+            }
+
+            // 대진 표시
+            const currentRound = rounds[currentMatch];
+        }
+    </script>
+</body>
+</html>
